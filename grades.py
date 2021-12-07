@@ -17,7 +17,7 @@ if __name__=="__main__":
 	for i in range(len(sys.argv)):
 		if sys.argv[i]=="--update":
 			print("Running database update...")
-			f=open('sgo.xls')
+			f=open('grades.xls')
 			html=f.read()
 			f.close()
 			tables.html2csv('grades.xls', html)
