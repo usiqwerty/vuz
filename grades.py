@@ -7,7 +7,7 @@ def get_average(subject):
 		for row in rd: #iterate until subject was found, else return 0
 			last=len(row)-1
 			avg=row[last]
-			if row[0].lower().find(subject)>=0:
+			if subject in row[0].lower():
 				return avg.replace(',', '.')
 				#we need to decimal delimeter to point
 				#to make python able to convert string into float

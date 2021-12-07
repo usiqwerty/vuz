@@ -27,7 +27,7 @@ def olymps(upd, subj, lvl):
 				lastname=name
 			else:
 				name=lastname
-			if ( level==str(lvl) or lvl==0 )and subject.find(subj)>=0:
+			if ( level==str(lvl) or lvl==0 ) and subj in subject:
 				#if this is the one we need
 
 				if lastprintname!=name:
