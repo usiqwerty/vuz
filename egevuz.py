@@ -18,10 +18,15 @@ from bs4 import BeautifulSoup
 
 def vuzopedia(marks, city):
 	url="https://vuzopedia.ru/vuzfilter?vuz=&mat={}&rus={}&fiz={}&obshe={}&ist={}&biol={}&inform={}&him={}&liter={}&georg={}&inyaz={}&city[]={}".format(*marks, city)
-	print (url)
-	html=requests.get(url).text
-	soup=BeautifulSoup(html, 'html.parser')
-	vuz_list=soup.find_all("div", class_="itemVuzTitle")
+	print (url+"\n")
+	print ("Подождите...", end='\r')
+	try:
+		html=requests.get(url).text
+		soup=BeautifulSoup(html, 'html.parser')
+		vuz_list=soup.find_all("div", class_="itemVuzTitle")
 
-	for i in vuz_list:
-		print(i.text.strip())
+		for i in vuz_list:
+			print(i.text.strip())
+	except requests.exceptions.ConnectionError:
+		print("\nВы не подключены к Интернету")
+
