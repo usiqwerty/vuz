@@ -1,4 +1,6 @@
 *.xls
 *.csv
 *.html
+*.sh
+*.txt
 __pycache__
