@@ -8,6 +8,21 @@ print("vuz abobus by usiqwerty/2021")
 
 
 subjs=['математика','русский язык','физика','общест','история','биология', 'информа', 'химия', 'литература', 'география', 'иностран']
+cities={
+'Москва':59,
+'Санкт-Петербург':50,
+'Екатеринбург':83,
+'Архангельск':5,
+'Астрахань':7,
+'Владивосток':76,
+'Иваново':23,
+'Ростов-на-Дону':68,
+'Махачкала':20
+}
+
+for i in cities:
+	print(cities[i], "\t"+i)
+city=int(input("Введите код города: "))
 
 for i in range(len(subjs)):
 	print(i+1, subjs[i])
@@ -22,7 +37,7 @@ print("\nВаши баллы на ЕГЭ предположительно буд
 print("На основе этих баллов, вы можете попасть в один из этих вузов:\n")
 
 
-egevuz.vuzopedia(marks, 83)
+egevuz.vuzopedia(marks, city)
 if ol in ["y", "д"] :
 	#we are using set instead of list
 	#to prevent duplicates
