@@ -16,7 +16,9 @@ from bs4 import BeautifulSoup
 #		for i in mat:
 #			print(i.replace('&nbsp;', ' '))
 
+result_vuzes=[]
 def vuzopedia(marks, city):
+
 	url="https://vuzopedia.ru/vuzfilter?vuz=&mat={}&rus={}&fiz={}&obshe={}&ist={}&biol={}&inform={}&him={}&liter={}&georg={}&inyaz={}&city[]={}".format(*marks, city)
 	print (url+"\n")
 	print ("Подождите...", end='\r')
@@ -26,7 +28,8 @@ def vuzopedia(marks, city):
 		vuz_list=soup.find_all("div", class_="itemVuzTitle")
 
 		for i in vuz_list:
-			print(i.text.strip())
+			result_vuzes.append( i.text.strip() )
 	except requests.exceptions.ConnectionError:
-		print("\nВы не подключены к Интернету")
+		return ( [], '' )
 
+	return ( result_vuzes, url )
