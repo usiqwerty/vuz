@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-marks=list()
+#marks=list()
 
 def test(sum, count):
 	result=[]
