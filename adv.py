@@ -34,7 +34,7 @@ def compare(upd, subj, lvl):
 	id=0
 	for i in rsr.olymps(upd, subj, lvl):
 		for j in olmps:
-			if i.lower() in j.lower():
+			if i.lower()[-10:] in j.lower():
 				result.append( (dts[olmps.index(j)], i ) )
 
 		id+=1
@@ -58,6 +58,8 @@ if __name__=="__main__":
 		elif i!= sys.argv[0]:
 			subject=i
 
-
+	last=""
 	for date,name in compare(upd,subject, level):
-		print(date, name)
+		if last!=name:
+			print(date, name)
+			last=name
