@@ -43,6 +43,7 @@ def olymps(upd, subj, lvl):
 				result.append( (dts[olmps.index(j)], i ) )
 
 		id+=1
+	result.sort(key=lambda tup: tup[0])
 	return result
 if __name__=="__main__":
 	args=sys.argv
