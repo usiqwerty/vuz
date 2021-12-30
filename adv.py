@@ -8,8 +8,8 @@ url="https://info.olimpiada.ru/events/count/2500?class[10]=on"
 def olymp_dates():
 	result=[]
 	print(url)
-	#html=requests.get(url).text
-	with open('tmp.html', 'r') as f:
+
+	with open('dates.html', 'r') as f:
 		html=f.read()
 	soup=BeautifulSoup(html, 'html.parser')
 	list_in_div=soup.find_all("div", class_="inner_main")[0]
@@ -23,7 +23,12 @@ def olymp_dates():
 		title=i.find("a").text
 		result.append( (date[2:], title) )
 	return result
-def compare(upd, subj, lvl):
+def olymps(upd, subj, lvl):
+	if upd:
+		html=requests.get(url).text
+		with open('dates.html', 'w') as f:
+			f.write(html)
+
 	dts=[]
 	olmps=[]
 	for date, name in olymp_dates():
@@ -57,9 +62,10 @@ if __name__=="__main__":
 			upd=True
 		elif i!= sys.argv[0]:
 			subject=i
-
+	if upd:
+		print("Runnnig databases update...")
 	last=""
-	for date,name in compare(upd,subject, level):
+	for date,name in olymps(upd,subject, level):
 		if last!=name:
 			print(date, name)
 			last=name
