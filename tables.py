@@ -8,7 +8,7 @@ def html2csv(filename, html):
 	basename=filename.split('.')[0]
 	#print ("Reading data...  [   ]", end='\r')
 
-	print ("Processing...    [*  ]", end='\r')
+	#print ("Processing...    [*  ]", end='\r')
 	soup = BeautifulSoup(html, 'html.parser')
 	table = soup.findAll("table")[1]
 	rows = table.findAll('tr')
@@ -28,15 +28,16 @@ def html2csv(filename, html):
 			row_text.insert(0, "")
 		row_text_array.append(row_text)
 
-	print ("Saving...        [** ]", end='\r')
+	#print ("Saving...        [** ]", end='\r')
 	with open(basename+".csv", "w", newline='', encoding='utf8') as f:
 		wr = csv.writer(f, delimiter=',', quotechar='"')
 		for row_text_single in row_text_array:
 			wr.writerow(row_text_single)
-	print ("Database updated [***]")
+	#print ("Database updated [***]")
 
 if __name__=="__main__":
 	if len(sys.argv)==2:
-		html2csv(sys.argv[1])
+		html2csv(sys.argv[1], open(sys.argv[1]).read())
 	else:
-		html2csv(input(".html to be converted to .csv: "))
+		fn=input(".html to be converted to .csv: ")
+		html2csv(fn, open(fn).read())
