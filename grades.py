@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import sys, tables, csv
+import sys, csv
+from . import tables
 
 def get_average(subject):
 	with open('grades.csv', newline='', encoding='utf8') as csvfile:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import egevuz, rsr, grades, adv
+from . import egevuz, rsr, grades, adv
 import sys
 subjs=['математика','русский язык','физика','общест','история','биология', 'информа', 'химия', 'литература', 'география', 'иностран']
 cities={
@@ -46,7 +46,7 @@ if __name__=="__main__":
 			advanced_olymps=oly
 		else:
 			try:
-				city=int(i)
+				city=int(i) #if argument is number, then it is the city
 			except:
 				continue
 

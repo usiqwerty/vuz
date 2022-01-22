@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import csv, sys, requests, tables
+import csv, sys, requests
+from . import tables
 import pandas as pd
 from bs4 import BeautifulSoup
 

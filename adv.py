@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import requests, sys
-import rsr
+from . import rsr
 import pandas as pd
 from bs4 import BeautifulSoup
 url="https://info.olimpiada.ru/events/count/2500?class[10]=on"
