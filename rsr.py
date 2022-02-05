@@ -1,9 +1,43 @@
 #!/usr/bin/env python3
 import csv, sys, requests
-from . import tables
+#import tables
 import pandas as pd
 from bs4 import BeautifulSoup
 
+def html2csv(filename, html):
+	basename=filename.split('.')[0]
+	#print ("Reading data...  [   ]", end='\r')
+	#print ("Processing...    [*  ]", end='\r')
+	soup = BeautifulSoup(html, 'html.parser')
+	table = soup.findAll("table")[1]
+	rows = table.findAll('tr')
+
+	row_text_array = []
+	for row in rows:
+		row_text = []
+		#it is possible to add 'th' to  findAll argument,
+		#so you could iterate table header
+		cols = row.findAll(['td'])
+		for row_element in cols:
+			row_text.append(row_element.text.replace('\n', '').strip())
+		#if some cells were merged, we need to reserve place there
+
+		#TODO: get rid of loop-based row extender
+		for i in range ( 5 - len(row_text) ):
+			row_text.insert(0, "")
+		link=cols[1].find("a")
+		if link:
+			row_text.append(link.get("href"))
+		else:
+			row_text.append("")
+		row_text_array.append(row_text)
+
+	#print ("Saving...        [** ]", end='\r')
+	with open(basename+".csv", "w", newline='', encoding='utf8') as f:
+		wr = csv.writer(f, delimiter=',', quotechar='"')
+		for row_text_single in row_text_array:
+			wr.writerow(row_text_single)
+	#print ("Database updated [***]")
 
 
 
@@ -13,7 +47,7 @@ def olymps(upd, subj, lvl):
 	if upd:
 		print ("Fetching data...")
 		html=requests.get("https://rsr-olymp.ru").text
-		tables.html2csv('rsr-olymp.csv', html)
+		html2csv('rsr-olymp.csv', html)
 	with open('rsr-olymp.csv', newline='', encoding='utf8') as csvfile:
 		rd=csv.reader(csvfile, delimiter=',', quotechar='"')
 		for row in rd:
@@ -22,18 +56,20 @@ def olymps(upd, subj, lvl):
 			#theme=row[2]
 			subject=row[3]
 			level=row[4]
-
+			link=row[5]
 			if name!= "":
 				#if this is next olympiad
 				lastname=name
+				lastlink=link
 			else:
+				link=lastlink
 				name=lastname
 			if ( level==str(lvl) or lvl==0 ) and subj in subject:
 				#if this is the one we need
 
 				if lastprintname!=name:
 					#and it wasn't printed before
-					output.append(name)
+					output.append(name+" "+link)
 					lastprintname=name
 	return output
 
