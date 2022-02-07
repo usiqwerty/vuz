@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from . import egevuz, rsr, grades, adv
+import egevuz, rsr, grades, adv
 import sys
 subjs=['математика','русский язык','физика','общест','история','биология', 'информа', 'химия', 'литература', 'география', 'иностран']
 cities={
