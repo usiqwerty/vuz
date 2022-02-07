@@ -1,53 +1,48 @@
 #!/usr/bin/env python3
 import csv, sys, requests
-#import tables
-import pandas as pd
 from bs4 import BeautifulSoup
 
-def html2csv(filename, html):
-	basename=filename.split('.')[0]
-	#print ("Reading data...  [   ]", end='\r')
-	#print ("Processing...    [*  ]", end='\r')
+def update():
+	print ("Requesting rsr-olymp.ru...")
+	html=requests.get("https://rsr-olymp.ru").text
+
 	soup = BeautifulSoup(html, 'html.parser')
 	table = soup.findAll("table")[1]
 	rows = table.findAll('tr')
 
-	row_text_array = []
-	for row in rows:
-		row_text = []
-		#it is possible to add 'th' to  findAll argument,
-		#so you could iterate table header
-		cols = row.findAll(['td'])
-		for row_element in cols:
-			row_text.append(row_element.text.replace('\n', '').strip())
-		#if some cells were merged, we need to reserve place there
+	total= len(rows)
+	done=0
 
-		#TODO: get rid of loop-based row extender
-		for i in range ( 5 - len(row_text) ):
-			row_text.insert(0, "")
-		link=cols[1].find("a")
-		if link:
-			row_text.append(link.get("href"))
-		else:
-			row_text.append("")
-		row_text_array.append(row_text)
-
-	#print ("Saving...        [** ]", end='\r')
-	with open(basename+".csv", "w", newline='', encoding='utf8') as f:
+	with open("rsr-olymp.csv", "w", newline='', encoding='utf8') as f:
 		wr = csv.writer(f, delimiter=',', quotechar='"')
-		for row_text_single in row_text_array:
-			wr.writerow(row_text_single)
-	#print ("Database updated [***]")
+
+		for row in rows:
+			row_text = []
+
+			#it is possible to add 'th' to  findAll argument,
+			#so you could iterate table header
+			cols = row.findAll(['td'])
+			for row_element in cols:
+				row_text.append(row_element.text.replace('\n', '').strip())
+
+			#if some cells were merged, we need to reserve place there
+			times= 5 - len(row_text)
+			row_text = [""]*times + row_text
+
+			link=cols[1].find("a")
+			row_text.append(link.get("href") if link else "")
+
+			wr.writerow(row_text)
+
+			done+=1
+			print(f"Updating: {done}/{total}", end='\r')
+	print("")
 
 
-
-def olymps(upd, subj, lvl):
+def olymps(subj, lvl):
 	output=[]
 	lastprintname=""
-	if upd:
-		print ("Fetching data...")
-		html=requests.get("https://rsr-olymp.ru").text
-		html2csv('rsr-olymp.csv', html)
+
 	with open('rsr-olymp.csv', newline='', encoding='utf8') as csvfile:
 		rd=csv.reader(csvfile, delimiter=',', quotechar='"')
 		for row in rd:
@@ -58,7 +53,7 @@ def olymps(upd, subj, lvl):
 			level=row[4]
 			link=row[5]
 			if name!= "":
-				#if this is next olympiad
+				#if this is next olympiad, not the continuation of last one
 				lastname=name
 				lastlink=link
 			else:
@@ -66,7 +61,6 @@ def olymps(upd, subj, lvl):
 				name=lastname
 			if ( level==str(lvl) or lvl==0 ) and subj in subject:
 				#if this is the one we need
-
 				if lastprintname!=name:
 					#and it wasn't printed before
 					output.append(name+" "+link)
@@ -79,7 +73,6 @@ if __name__=="__main__":
 	subject=''
 	result=[]
 
-	upd=False
 	for i in args:
 		if i=="I":
 			level=1
@@ -88,11 +81,10 @@ if __name__=="__main__":
 		elif i=="III":
 			level=3
 		elif i=="--update":
-			upd=True
+			update()
 		elif i!= sys.argv[0]:
 			subject=i
-
-	#standalone wrapper
-	for i in olymps(upd, subject, level):
+	#wrapper
+	for i in olymps(subject, level):
 		print(i)
 

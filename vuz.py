@@ -73,7 +73,7 @@ if __name__=="__main__":
 		olymps=set()
 		for sub in filter(lambda x: int(scores[x])>=75, subs):
 			print(subjs[sub])
-			for i in rsr.olymps(False, subjs[sub].lower(), 1):
+			for i in rsr.olymps(subjs[sub].lower(), 1):
 				olymps.add(i)
 		for i in olymps:
 			print(i)
