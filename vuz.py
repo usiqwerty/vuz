@@ -1,85 +1,80 @@
 #!/usr/bin/env python3
-import egevuz, rsr, grades, adv
-import sys
-subjs=['математика','русский язык','физика','общест','история','биология', 'информа', 'химия', 'литература', 'география', 'иностран']
+import grades, egevuz, rsr
+subjs=['Математика','Русский язык','Физика','Обществознание','История','Биология', 'Информатика', 'Химия', 'Литература', 'География', 'Иностранный язык']
 cities={
-'Москва':59,
-'Санкт-Петербург':50,
-'Екатеринбург':83,
-'Архангельск':5,
-'Астрахань':7,
-'Владивосток':76,
-'Иваново':23,
-'Ростов-на-Дону':68,
-'Махачкала':20
+	59:'Москва',
+	50:'Санкт-Петербург',
+	83:'Екатеринбург',
+	5:'Архангельск',
+	7:'Астрахань',
+	76:'Владивосток',
+	23:'Иваново',
+	68:'Ростов-на-Дону',
+	20:'Махачкала'
 }
 
 oly=False
 advanced_olymps=False
 city=0
 
-def main (subj_input, marks, city, ol):
-	vuzes, url = egevuz.vuzopedia(marks, city)
+#def main ():
 
-	if url=='':
-		return ([],[], '')
-
-	olymps=set()
-	if ol or advanced_olymps:
-		for i in subj_input.split(" "):
-			school=float( grades.get_average(subjs[int(i)-1]) )
-			ege=(school-2)*33.3
-			if ege>=75:
-				if advanced_olymps:
-					for i in adv.olymps(upd=False, subj=subjs[int(i)-1], lvl=1):
-						olymps.add(i)
-				else:
-					for i in rsr.olymps(upd=False, subj=subjs[int(i)-1], lvl=1):
-						olymps.add(i)
-	return (vuzes, olymps, url)
 
 if __name__=="__main__":
-	print("vuz abobus by usiqwerty/2021")
-	for i in sys.argv:
-		if i=="-a":
-			oly=True
-			advanced_olymps=oly
-		else:
-			try:
-				city=int(i) #if argument is number, then it is the city
-			except:
-				continue
+	print ("vuz rewritten v2.0")
+	#print("testing 2.0")
 
+#subjects
 	for i in range(len(subjs)):
-		print(i+1, subjs[i])
-	subj_input=input("Выберите предметы через пробел: ")
+		print (str(i+1), "\t"+subjs[i])
+	subjs_input=map( lambda x: int(x)-1 , input("Предметы через пробел: ").split(' ') )
+	subs=list(subjs_input)
+	print (subs)
+	#subs=[0,1,6]
+###
 
-	if city==0:	#if not in cmdline, ask for ourself
-		for i in cities:
-			print(cities[i], "\t"+i)
-		city=int(input("Введите код города: "))
+#cities
+	for i in cities:
+		print(i,"\t"+ cities[i])
 
-	if advanced_olymps==False:
-		ol=input("Олимпиады надо? y/n: ")
-		if ol in ["y", "д"] :
-			oly=True
+	city=int(input("Код города: "))
+	print(cities[city])
+	olmps = True if input("Олимпиады y/n? ")=='y' else False
+###
 
-	marks=['']*11
-	for i in subj_input.split(" "):
-		school=float(grades.get_average(subjs[int(i)-1])) #school average for the subject
-		ege=(school-2)*33.3 #ege score
-		marks[int(i)-1]=round(ege) #assign ege score to certain subject
+#EGE score
+	grades=grades.get_grades(list(map(lambda x: subjs[x],subs)))
+	for i in grades:
+		#if i[:5].lower() in subjs
+		try:
+			curr=float(grades[i].replace(',','.'))
+		except:
+			continue
+		grades[i]=round((curr-2)*33.3)
+	print(grades)
+###
 
-	vuzes, olymps, url = main(subj_input, marks, city, oly)	#fetch data
-	if url=='':
-		print("Нет подключения к Интернету")
-	else:
-		print("\nВаши баллы на ЕГЭ предположительно будут такими: ", list(filter(lambda x: x!='', marks)))
-		print("На основе этих баллов, вы можете попасть в один из этих вузов:\n")
-		for i in vuzes:
-			print (i)
-		if oly:
-			print("\nА так же олимпиады:")
-			for i in olymps:
-				print (i)
-		print("Удачи ;)")
+#vuzopedia
+	scores=[]
+	for i in range(len(subjs)):
+		score=''
+		if subjs[i] in grades:
+			score=str(grades[subjs[i]])
+		scores.append(score)
+	print(scores)
+	url="https://vuzopedia.ru/vuzfilter?vuz=&mat={}&rus={}&fiz={}&obshe={}&ist={}&biol={}&inform={}&him={}&liter={}&georg={}&inyaz={}&city[]={}".format(*scores, city)
+	vuzes=egevuz.vuzopedia(url)
+	for i in vuzes:
+		print(i)
+###
+
+#olympiads
+	if olmps:
+		olymps=set()
+		for sub in filter(lambda x: int(scores[x])>=75, subs):
+			print(subjs[sub])
+			for i in rsr.olymps(False, subjs[sub].lower(), 1):
+				olymps.add(i)
+		for i in olymps:
+			print(i)
+###

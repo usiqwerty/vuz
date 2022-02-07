@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-import requests, re
+import requests
 from bs4 import BeautifulSoup
 
-result_vuzes=[]
 
-def vuzopedia(marks, city):
-	url="https://vuzopedia.ru/vuzfilter?vuz=&mat={}&rus={}&fiz={}&obshe={}&ist={}&biol={}&inform={}&him={}&liter={}&georg={}&inyaz={}&city[]={}".format(*marks, city)
 
+def vuzopedia(url):
+	result_vuzes=[]
 	try:
 		html=requests.get(url).text
 		soup=BeautifulSoup(html, 'html.parser')
@@ -15,6 +14,6 @@ def vuzopedia(marks, city):
 		for i in vuz_list:
 			result_vuzes.append( i.text.strip() )
 	except requests.exceptions.ConnectionError:
-		url=''
+		result_vuzes.append(-1)
 
-	return ( result_vuzes, url )
+	return result_vuzes
