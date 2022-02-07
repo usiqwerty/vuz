@@ -2,8 +2,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-
-
 def vuzopedia(url):
 	result_vuzes=[]
 	try:
