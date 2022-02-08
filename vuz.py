@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-import grades, egevuz, rsr
+import grades, egevuz, rsr, printer
 subjs=['Математика','Русский язык','Физика','Обществознание','История','Биология', 'Информатика', 'Химия', 'Литература', 'География', 'Иностранный язык']
 cities={
 	59:'Москва',
@@ -22,6 +22,8 @@ if __name__=="__main__":
 		except:
 			if i=="--update":
 				rsr.update()
+			elif i=="--print":
+				printout=True
 			continue
 	print ("vuz rewritten v2.0")
 
@@ -74,4 +76,9 @@ if __name__=="__main__":
 				olymps.add(i)
 		for i in olymps:
 			print(i)
+	else:
+		olymps=['Поиск олимпиад не производился']
+	if printout:
+		print("Generating printout...")
+		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)))
 ###
