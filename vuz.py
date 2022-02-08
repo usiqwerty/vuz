@@ -13,7 +13,7 @@ cities={
 	68:'Ростов-на-Дону',
 	20:'Махачкала'
 }
-
+version="rewritten v2.1"
 if __name__=="__main__":
 	city=0
 	for i in sys.argv:
@@ -25,7 +25,7 @@ if __name__=="__main__":
 			elif i=="--print":
 				printout=True
 			continue
-	print ("vuz rewritten v2.0")
+	print ("vuz", version)
 
 #subjects
 	for i in range(len(subjs)):
@@ -80,5 +80,5 @@ if __name__=="__main__":
 		olymps=['Поиск олимпиад не производился']
 	if printout:
 		print("Generating printout...")
-		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)))
+		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)), version)
 ###

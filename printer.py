@@ -2,9 +2,9 @@
 import rtfunicode
 default_fs=14
 
-def printout(vuzes, olymps, marks):
+def printout(vuzes, olymps, marks, version):
 	file="{\\rtf\n"
-	file +="{\\fs48 {\\b vuz } printout (rewritten v2.0) \\fs0}\\par\n{\\upr\\fs"+ format(default_fs*2)+"\n" # there are half-points in rtf
+	file +="{\\fs48 {\\b vuz } printout ("+version+") \\fs0}\\par\n{\\upr\\fs"+ format(default_fs*2)+"\n" # there are half-points in rtf
 	line="---------"+str(marks)+"----------------------------------"
 	file +=line+"\\par\n"
 	for i in vuzes:
