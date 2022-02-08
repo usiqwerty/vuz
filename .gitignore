@@ -3,4 +3,5 @@
 *.html
 *.sh
 *.txt
+*.rtf
 __pycache__
