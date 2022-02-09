@@ -3,9 +3,9 @@ import rtfunicode
 from os.path import join
 default_fs=14
 printout_rtf=join("userdata", "printout.rtf")
-def printout(vuzes, olymps, marks, version):
-	file="{\\rtf\n"
-	file +="{\\fs48 {\\b vuz } printout ("+version+") \\fs0}\\par\n{\\upr\\fs"+ format(default_fs*2)+"\n" # there are half-points in rtf
+def printout(vuzes, olymps, marks, version, mentioned_vuzes, verbose_vuzes):
+	file="{\\rtf1\n"
+	file +="{\\fs48 {\\b vuz } printout ("+version+") \\fs0}\\par\n{\\upr\n"
 	line="---------"+str(marks)+"----------------------------------"
 	file +=line+"\\par\n"
 	for i in vuzes:
@@ -13,8 +13,13 @@ def printout(vuzes, olymps, marks, version):
 		file +="{\\ql "+ i +" \\q0}\\par\n"
 
 	file +="-"*len(line) +"\par\n"
-	file +="https://vuzopedia.ru/program/bakispec/<id>\n"
+	file +="https://vuzopedia.ru/program/bakispec/<id>\\par\n"
+	file +="https://vuzopedia.ru/vuz/<id>\n"
 
+	if verbose_vuzes:
+		file +="-"*len(line) +"\par\n"
+		for vuz in mentioned_vuzes:
+			file+= mentioned_vuzes[vuz] + " " + str(vuz.encode('rtfunicode'))[1:].replace('\\\\','\\') + "\\par\n"
 	file +="\\page\n"
 	if len(olymps)>1:
 		for i in olymps:
@@ -27,6 +32,8 @@ def printout(vuzes, olymps, marks, version):
 	file+="\n}}"
 	file=file.replace("'", "")
 	file=file.replace('"', '')
+
+
 
 	f=open(printout_rtf, 'w')
 	f.write(file)

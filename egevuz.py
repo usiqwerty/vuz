@@ -4,7 +4,6 @@ from time import sleep
 from bs4 import BeautifulSoup
 p=['█', '▓', '▒','░']
 dict_vuzes=dict()
-
 def deepscan(id):
 	result_vuzes=set()
 	try:
@@ -24,7 +23,6 @@ def deepscan(id):
 					dict_vuzes[title]=re.findall(r"[0-9]+",i.get("href"))[0]
 				result_vuzes.add(dict_vuzes[title])
 
-
 	except requests.exceptions.ConnectionError:
 		result_vuzes.add(-1)
 
@@ -38,11 +36,10 @@ def vuzopedia(scores, city, theme, deep):
 	vuzes=set()
 
 	while current<total:
-		msg=f'Processing: {page}/{total} \t'
+		msg=f'Processing: page {page} of {total} \t'
 		print(msg+p[3]*round(80), end='\r')
 		print(msg+p[0]*round(80*page/total), end='\r')
 
-		print(f"Fetching data... Pass {page} of {total}", end='\r')
 		url="https://vuzopedia.ru/vuzfilter/prog?vuz=&obshezh=&voenkaf=&budzh=&gosu=&theme={}&och=&zaoch=&ochzaoch=&distans=&vstupisp=&idcmb=&page={}&mat={}&rus={}&fiz={}&obshe={}&ist={}&biol={}&inform={}&him={}&liter={}&georg={}&inyaz={}&city[]={}".format(theme, page, *scores, city)
 		try:
 			html=requests.get(url).text
@@ -56,7 +53,6 @@ def vuzopedia(scores, city, theme, deep):
 					ans += " " + str(deepscan(id))
 				result_vuzes.add(ans)
 
-
 			if total==1:	#if we'll find out that it is really one, then
 					#this loop won't run again,
 					#because 'current' and 'total' would be equal
@@ -64,7 +60,6 @@ def vuzopedia(scores, city, theme, deep):
 				if pagination:
 					pages=pagination.find_all("li")
 					total=len(pages)
-
 
 		except requests.exceptions.ConnectionError:
 			result_vuzes.add(-1)

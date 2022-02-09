@@ -14,7 +14,8 @@ cities={
 	68:'Ростов-на-Дону',
 	20:'Махачкала'
 }
-themes={1: "Управление и менеджмент",
+themes={
+1: "Управление и менеджмент",
 2: "Экономика и финансы",
 3: "Математика, информационные науки и технологии",
 4: "Образование и педагогика",
@@ -70,34 +71,33 @@ if __name__=="__main__":
 	print ("vuz", version)
 
 #subjects
-	#for i in range(len(subjs)):
-	#	print (str(i+1), "\t"+subjs[i])
-	#subjs_input=map( lambda x: int(x)-1 , input("Предметы через пробел: ").split(' ') )
-	#subs=list(subjs_input)
-	subs=[0,1,6]
+	for i in range(len(subjs)):
+		print (str(i+1), "\t"+subjs[i])
+	subjs_input=map( lambda x: int(x)-1 , input("Предметы через пробел: ").split(' ') )
+	subs=list(subjs_input)
+	#subs=[0,1,6]
 ###
 
 #cities
-	#if city==0:
-	#	for i in cities:
-	#		print(i,"\t"+ cities[i])
-		#city=int(input("Код города: "))
-		#print(cities[city])
-	city=83
+	if city==0:
+		for i in cities:
+			print(i,"\t"+ cities[i])
+		city=int(input("Код города: "))
+		print(cities[city])
+	#city=83
 ###
-	#olmps = True if input("Олимпиады y/n? ")=='y' else False
-	olmps=True
+	olmps = True if input("Олимпиады y/n? ")=='y' else False
+	#olmps=True
 
 
 #EGE score
-#	grades=grades.get_grades(list(map(lambda x: subjs[x],subs)))
-#	for i in grades:
-#		#if i[:5].lower() in subjs
-#		try:
-#			curr=float(grades[i].replace(',','.'))
-#		except:
-#			continue
-#		grades[i]=round((curr-2)*33.3)
+	grades=grades.get_grades(list(map(lambda x: subjs[x],subs)))
+	for i in grades:
+		try:
+			curr=float(grades[i].replace(',','.'))
+		except:
+			continue
+		grades[i]=round((curr-2)*33.3)
 ###
 #themes
 	for i in themes:
@@ -105,15 +105,17 @@ if __name__=="__main__":
 	theme=int(input("Тематика: "))
 	print(themes[theme])
 ###
+	if printout:
+		verbose_vuzes = True if input("Прописать названия вузов в дополнение к их номерам y/n? ")=="y" else False
 #vuzopedia
-	#scores=[]
-	#for i in range(len(subjs)):
-#		score=''
-	#	if subjs[i] in grades:
-	#		score=str(grades[subjs[i]])
-	#	scores.append(score)
-	scores=['80', '80', '', '', '', '', '80', '', '', '', '']
-	print(scores)
+	scores=[]
+	for i in range(len(subjs)):
+		score=''
+		if subjs[i] in grades:
+			score=str(grades[subjs[i]])
+		scores.append(score)
+	#scores=['80', '80', '', '', '', '', '80', '', '', '', '']
+	#print(scores)
 	vuzes=egevuz.vuzopedia(scores, city, theme, deep)
 	for i in vuzes:
 		if i==-1:
@@ -134,5 +136,5 @@ if __name__=="__main__":
 		olymps=['Поиск олимпиад не производился']
 	if printout:
 		print("Generating printout...")
-		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)), version)
+		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)), version, egevuz.dict_vuzes, verbose_vuzes)
 ###
