@@ -13,9 +13,10 @@ cities={
 	68:'Ростов-на-Дону',
 	20:'Махачкала'
 }
-version="rewritten v2.1"
+version="rewritten v2.2"
 if __name__=="__main__":
 	city=0
+	printout=False
 	for i in sys.argv:
 		try:
 			city=int(i)

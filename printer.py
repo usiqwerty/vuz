@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import rtfunicode
+from os.path import join
 default_fs=14
-
+printout_rtf=join("userdata", "printout.rtf")
 def printout(vuzes, olymps, marks, version):
 	file="{\\rtf\n"
 	file +="{\\fs48 {\\b vuz } printout ("+version+") \\fs0}\\par\n{\\upr\\fs"+ format(default_fs*2)+"\n" # there are half-points in rtf
@@ -24,6 +25,6 @@ def printout(vuzes, olymps, marks, version):
 	file+="\n}}"
 	file=file.replace("'", "")
 
-	f=open('printout.rtf', 'w')
+	f=open(printout_rtf, 'w')
 	f.write(file)
 	f.close()

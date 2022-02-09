@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 import csv, sys
+from os.path import join
 from bs4 import BeautifulSoup
-
+grades_csv=join("userdata","grades.csv")
+grades_html=join("userdata","grades.html")
 def update():
-	f=open("grades.html")
+	f=open(grades_html)
 	html=f.read()
 	f.close()
 
 	soup = BeautifulSoup(html, 'html.parser')
-	table = soup.findAll("table")[1]
+	table=soup.findAll("table")[1] #we're taking only second table in .html file
 	rows = table.findAll('tr')
 
-	with open("grades.csv", "w", newline='', encoding='utf8') as f:
+	with open(grades_csv, "w", newline='', encoding='utf8') as f:
 		wr = csv.writer(f, delimiter=',', quotechar='"')
 
 		for row in rows:
@@ -25,7 +27,7 @@ def update():
 
 def get_grades(subs):
 	result=dict()
-	with open('grades.csv', newline='') as file:
+	with open(grades_csv, newline='') as file:
 		rd=csv.reader(file, delimiter=",", quotechar='"')
 		for row in rd:
 			for i in subs:

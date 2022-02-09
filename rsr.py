@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import csv, sys, requests
+from os.path import join
 from bs4 import BeautifulSoup
-
+rsr_olymp=join("userdata", "rsr-olymp.csv")
 def update():
 	print ("Requesting rsr-olymp.ru...")
 	html=requests.get("https://rsr-olymp.ru").text
@@ -13,7 +14,7 @@ def update():
 	total= len(rows)
 	done=0
 
-	with open("rsr-olymp.csv", "w", newline='', encoding='utf8') as f:
+	with open(rsr_olymp, "w", newline='', encoding='utf8') as f:
 		wr = csv.writer(f, delimiter=',', quotechar='"')
 
 		for row in rows:
@@ -43,7 +44,7 @@ def olymps(subj, lvl):
 	output=[]
 	lastprintname=""
 
-	with open('rsr-olymp.csv', newline='', encoding='utf8') as csvfile:
+	with open(rsr_olymp, newline='', encoding='utf8') as csvfile:
 		rd=csv.reader(csvfile, delimiter=',', quotechar='"')
 		for row in rd:
 			#id=row[0]
