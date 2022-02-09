@@ -13,7 +13,9 @@ def printout(vuzes, olymps, marks, version):
 		file +="{\\ql "+ i +" \\q0}\\par\n"
 
 	file +="-"*len(line) +"\par\n"
+	file +="https://vuzopedia.ru/program/bakispec/<id>\n"
 
+	file +="\\page\n"
 	if len(olymps)>1:
 		for i in olymps:
 			olymp=i.split("http")[0]
@@ -24,6 +26,7 @@ def printout(vuzes, olymps, marks, version):
 
 	file+="\n}}"
 	file=file.replace("'", "")
+	file=file.replace('"', '')
 
 	f=open(printout_rtf, 'w')
 	f.write(file)
