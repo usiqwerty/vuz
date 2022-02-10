@@ -57,6 +57,7 @@ if __name__=="__main__":
 	city=0
 	printout=False
 	deep=False
+	hothead=False
 	for i in sys.argv:
 		try:
 			city=int(i)
@@ -69,6 +70,8 @@ if __name__=="__main__":
 				deep=True
 			elif i=="--verbose":
 				verbose_vuzes=True
+			elif i=="--hothead":
+				hothead=True
 			continue
 	print ("vuz", version)
 
@@ -118,7 +121,7 @@ if __name__=="__main__":
 		scores.append(score)
 	#scores=['80', '80', '', '', '', '', '80', '', '', '', '']
 	#print(scores)
-	vuzes=egevuz.vuzopedia(scores, city, theme, deep)
+	vuzes=egevuz.vuzopedia(scores, city, theme, deep, hothead)
 	for i in vuzes:
 		if i==-1:
 			print("Нет интернета")

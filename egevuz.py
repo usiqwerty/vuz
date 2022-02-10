@@ -7,8 +7,11 @@ dict_vuzes=dict()
 def deepscan(id, city):
 	result_vuzes=set()
 	try:
-		url=f"https://vuzopedia.ru/region/city/{city}/program/bakispec/{id}/varianty"
-		print("Deepscanning", id)
+		if city=='':
+			url=f"https://vuzopedia.ru/program/bakispec/{id}/varianty"
+		else:
+			url=f"https://vuzopedia.ru/region/city/{city}/program/bakispec/{id}/varianty"
+		print("\nDeepscanning", id, end='')
 		html=requests.get(url).text
 		soup=BeautifulSoup(html, 'html.parser')
 		listed_vuzes=soup.find_all("a")
@@ -28,19 +31,24 @@ def deepscan(id, city):
 
 	return(result_vuzes)
 
-def vuzopedia(scores, city, theme, deep):
+def vuzopedia(scores, city, theme, deep, hothead):
 	page=1
 	total=1
 	current=0
 	result_vuzes=set()
 	vuzes=set()
+	if hothead:
+		city=''
+	else:
+		city=f"&city[]={city}"
 
 	while current<total:
 		msg=f'Processing: page {page} of {total} \t'
 		print(msg+p[3]*round(80), end='\r')
 		print(msg+p[0]*round(80*page/total), end='\r')
 
-		url="https://vuzopedia.ru/vuzfilter/prog?vuz=&obshezh=&voenkaf=&budzh=&gosu=&theme={}&och=&zaoch=&ochzaoch=&distans=&vstupisp=&idcmb=&page={}&mat={}&rus={}&fiz={}&obshe={}&ist={}&biol={}&inform={}&him={}&liter={}&georg={}&inyaz={}&city[]={}".format(theme, page, *scores, city)
+		url="https://vuzopedia.ru/vuzfilter/prog?vuz=&obshezh=&voenkaf=&budzh=&gosu=&theme={}&och=&zaoch=&ochzaoch=&distans=&vstupisp=&idcmb=&page={}&mat={}&rus={}&fiz={}&obshe={}&ist={}&biol={}&inform={}&him={}&liter={}&georg={}&inyaz={}".format(theme, page, *scores)
+		url+=city
 		try:
 			html=requests.get(url).text
 			soup=BeautifulSoup(html, 'html.parser')
