@@ -67,6 +67,8 @@ if __name__=="__main__":
 				printout=True
 			elif i=="--deep":
 				deep=True
+			elif i=="--verbose":
+				verbose_vuzes=True
 			continue
 	print ("vuz", version)
 
@@ -105,7 +107,7 @@ if __name__=="__main__":
 	theme=int(input("Тематика: "))
 	print(themes[theme])
 ###
-	if printout:
+	if printout and not verbose_vuzes:
 		verbose_vuzes = True if input("Прописать названия вузов в дополнение к их номерам y/n? ")=="y" else False
 #vuzopedia
 	scores=[]
