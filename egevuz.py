@@ -4,10 +4,10 @@ from time import sleep
 from bs4 import BeautifulSoup
 p=['█', '▓', '▒','░']
 dict_vuzes=dict()
-def deepscan(id):
+def deepscan(id, city):
 	result_vuzes=set()
 	try:
-		url=f"https://vuzopedia.ru/program/bakispec/{id}/varianty"
+		url=f"https://vuzopedia.ru/region/city/{city}/program/bakispec/{id}/varianty"
 		print("Deepscanning", id)
 		html=requests.get(url).text
 		soup=BeautifulSoup(html, 'html.parser')
@@ -50,7 +50,7 @@ def vuzopedia(scores, city, theme, deep):
 				id=re.findall( r"[0-9]+", i.get("href"))[0]
 				ans= str(id) + " "+ i.text.strip()
 				if deep:
-					ans += " " + str(deepscan(id))
+					ans += " " + str(deepscan(id, city))
 				result_vuzes.add(ans)
 
 			if total==1:	#if we'll find out that it is really one, then

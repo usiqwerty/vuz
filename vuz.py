@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import grades, egevuz, rsr, printer
-version="volk ubil zaitsa v3.0"
+version="volk ubil zaitsa v3.0.1"
 subjs=['Математика','Русский язык','Физика','Обществознание','История','Биология', 'Информатика', 'Химия', 'Литература', 'География', 'Иностранный язык']
 cities={
 	59:'Москва',
@@ -136,5 +136,5 @@ if __name__=="__main__":
 		olymps=['Поиск олимпиад не производился']
 	if printout:
 		print("Generating printout...")
-		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)), version, egevuz.dict_vuzes, verbose_vuzes)
+		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)), version, egevuz.dict_vuzes, verbose_vuzes, cities[city])
 ###
