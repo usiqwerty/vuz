@@ -58,6 +58,7 @@ if __name__=="__main__":
 	printout=False
 	deep=False
 	hothead=False
+	verbose_vuzes=False
 	for i in sys.argv:
 		try:
 			city=int(i)
@@ -110,7 +111,7 @@ if __name__=="__main__":
 	theme=int(input("Тематика: "))
 	print(themes[theme])
 ###
-	if printout and not verbose_vuzes:
+	if printout and not deep and not verbose_vuzes:
 		verbose_vuzes = True if input("Прописать названия вузов в дополнение к их номерам y/n? ")=="y" else False
 #vuzopedia
 	scores=[]
