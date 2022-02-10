@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import grades, egevuz, rsr, printer
-version="volk ubil zaitsa v3.0.1"
+version="volk ubil zaitsa v3.1"
 subjs=['Математика','Русский язык','Физика','Обществознание','История','Биология', 'Информатика', 'Химия', 'Литература', 'География', 'Иностранный язык']
 cities={
 	59:'Москва',
