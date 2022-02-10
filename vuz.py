@@ -141,5 +141,9 @@ if __name__=="__main__":
 		olymps=['Поиск олимпиад не производился']
 	if printout:
 		print("Generating printout...")
-		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)), version, egevuz.dict_vuzes, verbose_vuzes, cities[city])
+		if hothead:
+			city=''
+		else:
+			city=cities[city]
+		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)), version, egevuz.dict_vuzes, verbose_vuzes, city)
 ###

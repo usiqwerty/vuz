@@ -40,7 +40,7 @@ def vuzopedia(scores, city, theme, deep, hothead):
 	if hothead:
 		city=''
 	else:
-		city=f"&city[]={city}"
+		citystr=f"&city[]={city}"
 
 	while current<total:
 		msg=f'Processing: page {page} of {total} \t'
@@ -48,7 +48,7 @@ def vuzopedia(scores, city, theme, deep, hothead):
 		print(msg+p[0]*round(80*page/total), end='\r')
 
 		url="https://vuzopedia.ru/vuzfilter/prog?vuz=&obshezh=&voenkaf=&budzh=&gosu=&theme={}&och=&zaoch=&ochzaoch=&distans=&vstupisp=&idcmb=&page={}&mat={}&rus={}&fiz={}&obshe={}&ist={}&biol={}&inform={}&him={}&liter={}&georg={}&inyaz={}".format(theme, page, *scores)
-		url+=city
+		url+=citystr
 		try:
 			html=requests.get(url).text
 			soup=BeautifulSoup(html, 'html.parser')
