@@ -6,12 +6,13 @@ p=['█', '▓', '▒','░']
 dict_vuzes=dict()
 def deepscan(id, city):
 	result_vuzes=set()
+	print(city)
 	try:
 		if city=='':
 			url=f"https://vuzopedia.ru/program/bakispec/{id}/varianty"
 		else:
 			url=f"https://vuzopedia.ru/region/city/{city}/program/bakispec/{id}/varianty"
-		print("\nDeepscanning", id, end='')
+		print(f"{city} Deepscanning", id)
 		html=requests.get(url).text
 		soup=BeautifulSoup(html, 'html.parser')
 		listed_vuzes=soup.find_all("a")
@@ -38,7 +39,8 @@ def vuzopedia(scores, city, theme, deep, hothead):
 	result_vuzes=set()
 	vuzes=set()
 	if hothead:
-		city=''
+		print("HOTHEAD")
+		citystr=''
 	else:
 		citystr=f"&city[]={city}"
 
@@ -58,7 +60,10 @@ def vuzopedia(scores, city, theme, deep, hothead):
 				id=re.findall( r"[0-9]+", i.get("href"))[0]
 				ans= str(id) + " "+ i.text.strip()
 				if deep:
-					ans += " " + str(deepscan(id, city))
+					scanned = deepscan(id, city if not hothead else '')
+					if not scanned:
+						continue
+					ans += " " + str(scanned)
 				result_vuzes.add(ans)
 
 			if total==1:	#if we'll find out that it is really one, then
@@ -74,7 +79,7 @@ def vuzopedia(scores, city, theme, deep, hothead):
 		page+=1
 		current+=1
 		if page%10==0:
-			sleep(3)
+			sleep(5)
 		else:
 			sleep(1)
 	print("")
