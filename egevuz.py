@@ -17,13 +17,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+#TODO:make dup-check
 import requests, re
 from time import sleep
 from bs4 import BeautifulSoup
 p=['█', '▓', '▒','░']
-dict_vuzes=dict()
+
 def deepscan(id, city):
-	result_vuzes=set()
+	dict_vuzes=dict()
+	result_vuzes=list()
 	print(city)
 	try:
 		if city=='':
@@ -43,10 +45,10 @@ def deepscan(id, city):
 					continue
 				if title not in dict_vuzes:
 					dict_vuzes[title]=re.findall(r"[0-9]+",i.get("href"))[0]
-				result_vuzes.add(dict_vuzes[title])
+				result_vuzes.append(dict_vuzes[title])
 
 	except requests.exceptions.ConnectionError:
-		result_vuzes.add(-1)
+		result_vuzes.append(-1)
 
 	return(result_vuzes)
 
@@ -54,8 +56,8 @@ def vuzopedia(scores, city, theme, deep, hothead):
 	page=1
 	total=1
 	current=0
-	result_vuzes=set()
-	vuzes=set()
+	result_vuzes=list()
+	vuzes=list()
 	if hothead:
 		print("HOTHEAD")
 		citystr=''
@@ -76,13 +78,14 @@ def vuzopedia(scores, city, theme, deep, hothead):
 
 			for i in vuz_list:
 				id=re.findall( r"[0-9]+", i.get("href"))[0]
-				ans= str(id) + " "+ i.text.strip()
+				ans= [ str(id), i.text.strip() ]
 				if deep:
 					scanned = deepscan(id, city if not hothead else '')
 					if not scanned:
 						continue
-					ans += " " + str(scanned)
-				result_vuzes.add(ans)
+					ans += scanned
+					#ans.append ( str(scanned) )
+				result_vuzes.append(ans)
 
 			if total==1:	#if we'll find out that it is really one, then
 					#this loop won't run again,
@@ -93,7 +96,7 @@ def vuzopedia(scores, city, theme, deep, hothead):
 					total=len(pages)
 
 		except requests.exceptions.ConnectionError:
-			result_vuzes.add(-1)
+			result_vuzes.append(-1)
 		page+=1
 		current+=1
 		if page%10==0:
@@ -101,4 +104,4 @@ def vuzopedia(scores, city, theme, deep, hothead):
 		else:
 			sleep(1)
 	print("")
-	return list(result_vuzes)
+	return result_vuzes

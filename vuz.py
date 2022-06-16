@@ -17,9 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import sys
-import grades, egevuz, rsr, printer
-version="volk ubil zaitsa v3.1"
+import sys, os, csv
+import grades, egevuz, rsr, printer, wordgroup
+version="volk ubil zaitsa v4.0dev"
 subjs=['Математика','Русский язык','Физика','Обществознание','История','Биология', 'Информатика', 'Химия', 'Литература', 'География', 'Иностранный язык']
 cities={
 	59:'Москва',
@@ -97,6 +97,10 @@ if __name__=="__main__":
 				verbose_vuzes=True
 			elif i=="--hothead":
 				hothead=True
+			elif i=="--help":
+				print()
+				print(f"{sys.argv[0]} [city_id] [--update] [--print] [--deep] [--verbose]")
+				quit()
 			continue
 	print ("vuz", version)
 
@@ -147,11 +151,12 @@ if __name__=="__main__":
 	#scores=['80', '80', '', '', '', '', '80', '', '', '', '']
 	#print(scores)
 	vuzes=egevuz.vuzopedia(scores, city, theme, deep, hothead)
+	string_vuzes = list(map(' '.join, vuzes))
 	for i in vuzes:
 		if i==-1:
 			print("Нет интернета")
 			quit()
-		print(i)
+		#print(i) wordgroup will do it
 ###
 	print("https://vuzopedia.ru/program/bakispec/<id>")
 #olympiads
@@ -170,5 +175,21 @@ if __name__=="__main__":
 			city=''
 		else:
 			city=cities[city]
-		printer.printout(vuzes, olymps, list(filter(lambda x: x!='', scores)), version, egevuz.dict_vuzes, verbose_vuzes, city)
+		printer.printout(string_vuzes, olymps, list(filter(lambda x: x!='', scores)), version, egevuz.dict_vuzes, verbose_vuzes, city)
 ###
+	vuzfile=os.path.join("userdata", "vuzes.csv")
+	print("Saving vuzes...")
+	with open(vuzfile, "w", newline='', encoding="utf8") as f:
+		wr=csv.writer(f, delimiter=',', quotechar='"')
+		for row in vuzes:
+			#print(row)
+			print("*", end="")
+			wr.writerow(row)
+		print("")
+	print("Done")
+
+	vuzes_tr=[]
+	for i in vuzes:
+		vuzes_tr.append(i[1])
+	tree=wordgroup.gentree(vuzes_tr)
+	wordgroup.showtree(tree)
