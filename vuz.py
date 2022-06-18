@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#TODO:printout seems to be very strange and obsolete, maybe i should be deleted
+#TODO:printout seems to be very strange and obsolete, maybe it should be deleted
 import sys, os, csv
 import grades, egevuz, rsr, printer, wordgroup
 version="volk ubil zaitsa v4.0dev"
@@ -78,7 +78,7 @@ if __name__=="__main__":
 			elif arg=="--hothead":
 				hothead=True
 			elif arg=="--force":
-				print("--force option is not implemented")
+				#print("--force option is not implemented")
 				force=True
 			elif arg=="--help":
 				print()
@@ -105,19 +105,6 @@ if __name__=="__main__":
 	###
 	olmps = True if input("Олимпиады y/n? ")=='y' else False
 
-
-
-	#generate EGE score
-	subjects=list(map(lambda x: subjs[x],subs)) #get list of subjects by specified indexes
-	grades=grades.get_grades(subjects) #get grades by suject names
-	for i in grades:
-		try:	#translate decimal point and convert to float
-			curr=float(grades[i].replace(',','.'))
-			grades[i]=round((curr-2)*33.3)
-		except: #cell could be empty
-			continue
-	###
-
 	#themes
 	for i in themes:
 		print(i,"\t"+ themes[i])
@@ -127,28 +114,34 @@ if __name__=="__main__":
 	if printout and not deep and not verbose_vuzes: #deep and verbose modes are restricted to be printed
 		verbose_vuzes = True if input("Прописать названия вузов в дополнение к их номерам y/n? ")=="y" else False
 
-	#fetch vuzes
+	#get marks
+	subjects=list(map(lambda x: subjs[x],subs)) #get list of subjects by specified indexes
+	grades=grades.get_grades(subjects) #get grades (dict) by suject names
+
+	for subj in grades:
+		try:	#translate decimal point and convert to float
+			curr=float(grades[subj].replace(',','.'))
+			grades[subj]=round((curr-2)*33.3)
+		except: #cell could be empty
+			continue
+	###
+
+	#generate EGE score
 	scores=[]
-	#for i in range(len(subjs)):
-	for subj in subjs:
+	for subj in subjs: #the sus
 		score=''
-		#if subjs[i] in grades:
 		if subj in grades:
-			#score=str(grades[subjs[i]])
-			score=str(grades[subj])
+			if force:
+				score=input(f"Балл ЕГЭ по предмету {subj}: ")
+			else:
+				score=str(grades[subj])
 		scores.append(score)
 	#scores=['80', '80', '', '', '', '', '80', '', '', '', '']
-	results = egevuz.vuzopedia(scores, city, theme, deep) #, hothead
+	#fetch vuzes
+	results = egevuz.vuzopedia(scores, city, theme, deep)
 	string_results = list(map(' '.join, results)) #make string from each item of 'results' and put into list
 	if results[0]==-1:
 		print("Нет интернета")
-	'''replaced with wordgroup
-	for i in vuzes:
-		if i==-1:
-			print("Нет интернета")
-			quit()
-		print(i)
-	'''
 	###
 	print("https://vuzopedia.ru/program/bakispec/<id>")
 	#olympiads
@@ -164,8 +157,6 @@ if __name__=="__main__":
 	###
 	if printout:
 		print("Generating printout...")
-		#if hothead: it was done before
-		#	city=''
 		if not hothead:
 			city=cities[city]
 		printer.printout(string_results, olymps, list(filter(lambda x: x!='', scores)), version, egevuz.dict_vuzes, verbose_vuzes, city)
@@ -176,7 +167,6 @@ if __name__=="__main__":
 	with open(vuzfile, "w", newline='', encoding="utf8") as f:
 		wr=csv.writer(f, delimiter=',', quotechar='"')
 		for row in results:
-			#print(row)
 			print("*", end="")
 			wr.writerow(row)
 		print("")
