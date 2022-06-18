@@ -55,8 +55,8 @@ themes={
 	37: "Философия и религия",
 	38: "Нанотехнологии и наноматериалы"
 }
-if __name__=="__main__":
 
+if __name__=="__main__":
 	city=0
 	printout=False
 	deep=False
@@ -78,7 +78,6 @@ if __name__=="__main__":
 			elif arg=="--hothead":
 				hothead=True
 			elif arg=="--force":
-				#print("--force option is not implemented")
 				force=True
 			elif arg=="--help":
 				print()
@@ -91,10 +90,10 @@ if __name__=="__main__":
 	for i in range(len(subjs)):
 		print (str(i+1), "\t"+subjs[i]) #i-th subject
 	subjs_input=map( lambda x: int(x)-1 , input("Предметы через пробел: ").split(' ') ) #get int's from string and make index from number
-	subs=list(subjs_input) #make list from map object
-	###
+	needed_subjs=list(subjs_input) #make list from map object
 
-	#if city's not specified in cmdline
+
+	#get city if it isn't specified in cmdline
 	if city==0 and not hothead:
 		for i in cities:
 			print(i,"\t"+ cities[i])
@@ -102,59 +101,57 @@ if __name__=="__main__":
 		print(cities[city]) #choice
 	elif hothead:
 		city=''
-	###
+
+	#set olymps flag
 	olmps = True if input("Олимпиады y/n? ")=='y' else False
 
-	#themes
+	#get theme
 	for i in themes:
 		print(i,"\t"+ themes[i])
 	theme=int(input("Тематика: "))
-	print(themes[theme])
-	###
+
+	#printout stuff
 	if printout and not deep and not verbose_vuzes: #deep and verbose modes are restricted to be printed
 		verbose_vuzes = True if input("Прописать названия вузов в дополнение к их номерам y/n? ")=="y" else False
 
-	#get marks
-	subjects=list(map(lambda x: subjs[x],subs)) #get list of subjects by specified indexes
-	grades=grades.get_grades(subjects) #get grades (dict) by suject names
-
-	for subj in grades:
-		try:	#translate decimal point and convert to float
-			curr=float(grades[subj].replace(',','.'))
-			grades[subj]=round((curr-2)*33.3)
-		except: #cell could be empty
-			continue
-	###
+	#get marks from file
+	subjects=list(map(lambda x: subjs[x], needed_subjs)) #get list of subjects by specified indexes
+	needed_marks=grades.get_grades(subjects) #get grades (dict) by subject names
 
 	#generate EGE score
 	scores=[]
-	for subj in subjs: #the sus
+	for subj in subjs:
 		score=''
-		if subj in grades:
-			if force:
+		if subj in needed_marks:
+			if force: #forced score input
 				score=input(f"Балл ЕГЭ по предмету {subj}: ")
-			else:
-				score=str(grades[subj])
+			else: #get from file
+				try:	#translate decimal point and convert to float
+					curr=float(needed_marks[subj].replace(',','.'))
+					score=str(round((curr-2)*33.3))
+				except: #cell could be empty
+					print(f"Error decoding marks for {subj}")
+					exit()
 		scores.append(score)
-	#scores=['80', '80', '', '', '', '', '80', '', '', '', '']
-	#fetch vuzes
+
+	#parse website
 	results = egevuz.vuzopedia(scores, city, theme, deep)
 	string_results = list(map(' '.join, results)) #make string from each item of 'results' and put into list
 	if results[0]==-1:
 		print("Нет интернета")
-	###
-	print("https://vuzopedia.ru/program/bakispec/<id>")
-	#olympiads
+
+	#print("https://vuzopedia.ru/program/bakispec/<id>")
+	#get olympiads if needed
 	if olmps:
 		olymps=set()
-		for subj in filter(lambda x: int(scores[x])>=75, subs): #get only subjects with enough EGE score
+		for subj in filter(lambda x: int(scores[x])>=75, needed_subjs): #get only subjects with enough EGE score
 			for i in rsr.olymps(subjs[subj].lower(), 1): #and get olympiads for these subjects
 				olymps.add(i)
 		for i in olymps:
 			print(i)
 	else:
 		olymps=['Поиск олимпиад не производился']
-	###
+	#generate printout on demand
 	if printout:
 		print("Generating printout...")
 		if not hothead:
@@ -170,11 +167,11 @@ if __name__=="__main__":
 			print("*", end="")
 			wr.writerow(row)
 		print("")
-	print("Done")
-	###
-	result_tr=[]
-	for i in results:
-		result_tr.append(i[1])
-	tree=wordgroup.gentree(result_tr)
-	wordgroup.showtree(tree)
+	print(f"Done. Saved to {vuzfile}")
 
+	#print results in console
+	result_titles=[]
+	for i in results:
+		result_titles.append(i[1])
+	tree=wordgroup.gentree(result_titles)
+	wordgroup.showtree(tree)
