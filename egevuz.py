@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 #TODO:make dup-check
 import requests, re
 from time import sleep

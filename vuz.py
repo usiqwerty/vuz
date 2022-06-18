@@ -2,7 +2,7 @@
 #TODO:printout seems to be very strange and obsolete, maybe it should be deleted
 import sys, os, csv
 import grades, egevuz, rsr, printer, wordgroup
-version="volk ubil zaitsa v4.0dev"
+version="volk ubil zaitsa v4.0"
 subjs=['Математика','Русский язык','Физика','Обществознание','История','Биология', 'Информатика', 'Химия', 'Литература', 'География', 'Иностранный язык']
 cities={
 	59:'Москва',
@@ -170,8 +170,6 @@ if __name__=="__main__":
 	print(f"Done. Saved to {vuzfile}")
 
 	#print results in console
-	result_titles=[]
-	for i in results:
-		result_titles.append(i[1])
+	result_titles=[ line[1] for line in results ]
 	tree=wordgroup.gentree(result_titles)
 	wordgroup.showtree(tree)
